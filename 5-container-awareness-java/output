@@ -1,0 +1,2 @@
+Sending build context to Docker daemon   12.8kB
+Step 1/3 : FROM openjdk@sha256:44d7d71ba50444fd129707d2e884596009ba333f0ce0810584ee0dff0a70f1a9

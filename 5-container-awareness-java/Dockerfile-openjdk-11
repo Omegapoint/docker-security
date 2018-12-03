@@ -1,0 +1,3 @@
+FROM openjdk:11-jre
+COPY DockerTest.class /
+CMD  java ${JAVA_OPT} DockerTest                                                                                                        
