@@ -174,5 +174,5 @@ When running an application in a secure manner it is basically inevitable to hav
  1. provide a central management of secret data
  2. securely transmit secrets to specific containers
 
-Secrets can be any form of data such as a password, SSH private keys, SSL certificate or any aother pies of data that should not be transmitted over a network or stored unencrypted in a Dockerfile or in application's source code.
+Secrets can be any form of data such as a password, SSH private keys, SSL certificate or any other piece of data that should not be transmitted over a network or stored unencrypted in a Dockerfile or in application's source code.
 Docker Secrets require Swarm mode and do not work on stand alone containers.
