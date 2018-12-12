@@ -72,7 +72,7 @@ Another good practice for images are "automated builds" where the Docker Hub acc
 ### Dockerfile
 A Dockerfile is a simple text file that provides instructions on how to build a new image. It contains i.a. the following directives:
 * base image
-* environment variable
+* environment variables
 * files to include
 * exposed ports
 * entrypoint and commands to run
@@ -82,7 +82,7 @@ Every instruction in the Dockerfile creates a new read-only layer in the image.
 ### Image Layers
 Docker images are built upon layers. Each layer contains the differences and changes to the previous layer. Image layers are read-only, they cannot be changed by a running container. 
 Each container has a writeable layer on top of the image layers, called the container layer. This layer is destroyed with the container. Therefore one primitive for containers is immutability.
-List the image layers - including the layers of the base image, by using docker history command.
+List the image layers - including the layers of the base image - by using docker history command.
 
     $ docker history myImage
 
@@ -126,7 +126,7 @@ Cgroups allow to create hierarchical groups of processes in order to serve resou
 * devices
 * disk I/O
 
-Docker provides various switches to configure cgroups when running a container. Among them
+Docker provides various switches to configure cgroups when running a container. Among them are the following
 * --memory
 * --memory-swap
 * --oom-kill-disable
@@ -135,17 +135,23 @@ Docker provides various switches to configure cgroups when running a container. 
 * ...
 
 ### Capabilities
-Docker container runs as root per default. However, Linux provides a set to divide the power of the superuser called capabilities. Even though the container runs as root the process does not have full capabilities. Some of the default capabilities in Docker are:
+Docker containers run as root per default. However, Linux provides a set to divide the power of the superuser called capabilities. Even though the container runs as root the process does not have full capabilities. Some of the default capabilities in Docker are:
 * CHOWN
 * DAC_OVERRIDE
 * FOWER
 * NET_RAW
 * ...
 
+Some of them are quite powerful.
+
 CHOWN allows to change the ownership of any file system object.
+
 DAC_OVERRIDE allows to bypass file read, write, and execute permission checks. This means the process can read, write, and execute any file on the system, even if the permission and ownership fields would not allow it.
+
 FOWNER allows to bypass permission checks on operations that normally require the filesystem UID of the process to match the UID of the file. Similar to DAC_OVERRIDE.
+
 NET_RAW allows the use of RAW and PACKET sockets and enables the process to bind to any address for transparent proxying. In other words, the process may be able to spy on packets on its network.
+
 > **Note** It's good practice to **drop all capabilities** and just use the once required by the application.
 > Also, run containers as a **specified user** to minimize the impact in case someone succeeds to break out of the container.
 
@@ -154,12 +160,16 @@ NET_RAW allows the use of RAW and PACKET sockets and enables the process to bind
 
 ### Secure Computing Mode
 
-Secure Computing, seccomp, is similar to capabilities but provides an even more granular way to control and limit what a processes can do. With the help of seccomp you can restrict the system calls from the container. Docker provides a default whitelist where they disabled 44 out of more than 300 system calls, some of which are obsolete or do not support namespaces.
+Secure Computing, seccomp, is similar to capabilities but provides an even more granular way to control and limit what a processes can do. With the help of seccomp you can restrict the system calls from the container. Docker provides a default whitelist where 44 out of more than 300 system calls are disabled, some of which are obsolete or do not support namespaces.
 
 ## Docker Swarm
 Containers being so light and portable are perfect for orchestration. Despite different orchestration tools on the market Docker has its own tool called Docker Swarm. A swarm consists of one or several nodes of which at least one is a manager, where services and stacks are defined. A worker then runs one or more tasks of a service.
-In order to manage the global cluster state manager nodes implement the Raft Consensus Algorithm. Each change within the cluster creates a new log entry making the Raft log a likely target for information gathering. Raft logs not only contain the state of the cluster but also secrets. Therefore Raft log is encrypted by default and keys are rotated every 90 days. Also, all the traffic for managing the cluster is encrypted with TLS. Mutual TLS adds client authentication to the communication, making sure only trusted clients can connect to the swarm. Since setting up and managing an PKI can be quite cumbersome, Docker ships with a built-in Certificate Authority that creates certificates when needed and rotates keys regularly. 
- Docker 1.13 (January 2017), introduced Docker secrets, a way to 
+
+### Raft
+In order to manage the global cluster state manager nodes implement the Raft Consensus Algorithm. Each change within the cluster creates a new log entry making the Raft log a likely target for information gathering. Raft logs not only contain the state of the cluster but also secrets. Therefore the Raft log is encrypted by default and keys are rotated every 90 days. Also, all the traffic for managing the cluster is encrypted with TLS that protects secrets in transit. Mutual TLS adds client authentication to the communication, making sure only trusted clients can connect to the swarm. Since setting up and managing an PKI can be quite cumbersome, Docker ships with a built-in Certificate Authority that creates certificates when needed and rotates keys regularly. 
+
+### Docker Secrets
+When running an application in a secure manner it is basically inevitable to have some sort of secret. HTTPS should be standard and where there is a certificate there is a key. Secrets management becomes even more complex in distributed and cloud environments. That's were Docker Secrets fit in. Secrets were introduced in Docker 1.13 (January 2017) in order to 
 
  1. provide a central management of secret data
  2. securely transmit secrets to specific containers
