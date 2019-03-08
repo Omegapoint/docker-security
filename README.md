@@ -1,3 +1,4 @@
+This repository was created as part of Omegapoint's internal education program ('Kompetensdag').
 
 # Docker and Security
 Docker has been around for quite some time and is considered de facto standard for containerization software.
@@ -53,8 +54,8 @@ All operations from the client go through the Docker deamon that fetches  images
 Every container is based on an image. An image contains the code, dependencies and instructions for an application to run inside a container. A container is the instance of an image at runtime. Images reside on an image registry like Docker Hub. 
 
 ### Docker Hub
-Docker Hub is Docker's public, free-to-use registry that allows the community to publish Docker images. Everyone can create either a public or private repository. Docker Hub hosts official images for different products as well.
-In June 2018 Kromtech Security Center published a report about malicious Docker images that contained cryptomining software. Those images were active for about 1 year, had over 5 million pulls and enabled hackers to mine cryptocurrency worth about $90000. This report shows how important it is to verify the integrity of images and not to trust public repositories. 
+Docker Hub is Docker's public, free-to-use registry that allows the community to publish Docker images. Everyone can create either a public or private repository. Docker Hub hosts official images and images from verified publishers for different products as well. In addition Docker Certified Images are images that have passed some basic tests and are created according to best practices. 
+Nevertheless, in June 2018 Kromtech Security Center published a report about malicious Docker images that contained cryptomining software. Those images were active for about 1 year, had over 5 million pulls and enabled hackers to mine cryptocurrency worth about $90000. This report shows how important it is to verify the integrity of images and not to trust public repositories. 
 
 ### Docker Content Trust
 Docker offers a feature called "Docker Content Trust" that enables Docker deamon to only trust signed images. Official images on Docker Hub are signed. Docker Content Trust is the first step of minimizing the risk of running malicious code. Unfortunately this feature is turned off by default. To enable Docker Content Trust set the following environment variable:
